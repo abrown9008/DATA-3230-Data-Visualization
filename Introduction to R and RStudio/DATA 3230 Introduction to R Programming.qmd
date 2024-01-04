@@ -1,0 +1,368 @@
+---
+title: "An Introduction to the R Environment"
+author: "Dr. Austin Brown"
+institute: "Kennesaw State University"
+format: beamer
+editor: visual
+---
+
+## Why Use R?
+
+- You may be asking yourself, out of all of the possible visualization softwares which exist, why should I spend time learning and using R?
+
+\vskip 0.10 in
+
+- Great question!
+
+\vskip 0.10 in
+
+- R is a useful tool and worthwhile to learn for several reasons:
+    1. It's free!
+    2. Because it's open source, thousands of people have contributed packages and functions at a pace that proprietary softwares can't compete with
+    3. It is very flexible and robust meaning there's a lot you can do with it (including creating these very slides!)
+    4. It is becoming widely used across many industries
+    5. We can create visualizations and perform quantitative analyses in the same system.
+
+## So What is R?
+
+- R is a command-line, object-oriented programming language commonly used for data analysis and statistics.
+
+\vskip 0.10 in
+
+- \textbf{Command-line} means that we have to give R commands in order for us to get it to do something
+
+```{r}
+#| echo: true
+## I want to add 2 and 2
+2 + 2
+```
+
+## So What is R?
+
+- \textbf{Object-oriented} means that we can save individual pieces of output as some name that we can use later. This is a super handy feature, especially when you have complicated scripts!
+
+```{r,echo=TRUE}
+## I can save 2 + 2 as "a"
+a <- 2 + 2
+a
+```
+
+## What can R do?
+
+- What can R do? Well, for the purpose of data analytics, I am yet to find a limit of what it can do!
+
+\vskip 0.15 in
+
+- In this class, we will be using R as a tool for visualizing categorical and quantitative data through various means.
+
+## Importing Data into R
+
+- In order to visualize data in R, we need to be able to import data into R.
+
+\vskip 0.15 in
+
+- There are a variety of ways of importing data into R, but they largely depend on the type of datafile that you are importing (e.g., Excel file, CSV file, text file, etc.).
+
+\vskip 0.15 in
+
+- While there are lots of different files which can be imported into R (Google is an excellent resource for searching for code for how to do something), we're going to focus on two main types: Excel and CSV
+
+## Importing Data into R
+
+- Let's try importing a CSV file into R. This file is part of the famous Framingham Heart Study.
+
+\vskip 0.15 in
+
+- Since we set up our first class session by connecting to GitHub, we should have this file in our project folder already.
+
+\vskip 0.15 in
+
+- Now to read in this CSV file, we will use the \texttt{read\_csv} function which is part of the \texttt{readr} package.
+
+\vskip 0.15 in
+
+- Every function in R requires arguments specified inside of parentheses.
+
+## Importing Data into R
+
+- We can think of packages like toolboxes within a mechanic's workshop. Each toolbox contains different tools.
+
+\vskip 0.15 in
+
+- A tool is like a function; we use specific tools (functions) to solve specific problems!
+    - \texttt{read\_csv} is a tool we use to solve the problem of reading CSV files into R.
+
+\vskip 0.15 in
+
+- The \texttt{read\_csv} tools is stored within the \texttt{readr} toolbox (package).
+
+## Importing Data into R
+
+- Now, while many packages come installed in RStudio automatically, there are far, far more which we have to install from the web, including \texttt{readr}.
+
+\vskip 0.15 in
+
+- To install a package, we use the \texttt{install.packages} function:
+
+```{r,echo=TRUE,eval=F}
+## Installing the readr package ##
+install.packages('readr')
+```
+
+## Importing Data into R
+- Now, we can also think of functions like mathematical functions; we have to supply the function with special inputs called \textit{\underline{arguments}} in order to get the desired output.
+    - For instance, in the \texttt{install.packages} function, we had to specify to the function which package we wanted to install.
+
+\vskip 0.15 in
+
+- How do we know what arguments to specify for a given function?
+
+\vskip 0.15 in
+
+- There are lots of different ways, but one way we can do so is by using the \texttt{?} operator.
+
+```{r,echo=T,eval=F}
+## What are the arguments for read_csv? ##
+?readr::read.csv
+```
+
+## Importing Data into R
+
+- As we can see, there are a lot of arguments we can specify. However, we don't need to specify most of them.
+
+\vskip 0.15 in
+
+- All of the arguments which have an "$\texttt{=}$" after them, like "\texttt{col\_names = TRUE}", will retain that specific argument unless you explicitly change it. \texttt{col\_names = TRUE} means that the columns of the CSV file have names. If they don't, then we would change it to, \texttt{col\_names = FALSE} and the column names will have generic names, (\texttt{V1, V2, ... , VN}).
+
+\vskip 0.15 in
+
+- So for us, because we know that the CSV has names for the columns, our code for importing will be:
+
+```{r,echo=T}
+heart <- readr::read_csv("HEART.csv")
+```
+
+## Importing Data into R
+
+- Now that we've learned how to import a CSV file into R, let's learn how to import an XLSX file into R by using the esoph Excel file.
+
+\vskip 0.15 in
+
+- The tool we use to do this is a function called \texttt{read\_xlsx} which is part of the \texttt{readxl} package.
+
+\vskip 0.15 in
+
+- After installing \texttt{readxl}, we can read in the file by:
+
+```{r,echo=T}
+## Importing the 'esoph' dataset ##
+esoph <- readxl::read_xlsx("esoph.xlsx")
+```
+
+## Exploring Dataframes in R
+
+- So we've imported some datasets into R...how do we know that they imported correctly?
+
+\vskip 0.15 in
+
+- There are two general approaches I'd recommend. One is visual and one uses the \texttt{dplyr::glimpse} function.
+
+\vskip 0.15 in
+
+- In the upper right hand corner of the RStudio window, we see our heart dataframe we uploaded a bit ago. If we click on it, a new window will open up which shows us the structure of the dataframe, the values of the variables, and the variable names.
+
+## Exploring Dataframes in R
+
+- This visual method is effective for relatively small dataframes (\< 10,000 rows), but can bog down if you have a large dataframe.
+
+\vskip 0.15 in
+
+- To get around this, we can just look at a few rows of the dataframe using the \texttt{dplyr::glimpse} function, which prints the first few rows of a dataframe to your console.
+    - \texttt{dplyr::glimpse(heart)}
+
+```{r,echo=T,eval=F}
+## First, Install dplyr ##
+install.packages('dplyr')
+heart |>
+  dplyr::glimpse()
+```
+
+## Exploring Dataframes in R
+
+- As we visually inspect the first few rows of the HEART dataframe, we can see that the "Sex" variable appears to be \textit{\underline{categorical}} whereas the "Weight" variable appears to be \textit{\underline{quantitative}}.
+
+\vskip 0.15 in
+
+- A \textbf{quantitative} variable is something which can be measured with a number, like dollars, time, height, weight, blood pressure, etc. R refers to these as "numeric" variables.
+
+\vskip 0.15 in
+
+- A \textbf{categorical} variable is just the opposite. It is something which cannot be quantified and is more of a quality. These are things like sex, country of origin, hair color, cause of death etc. R refers to these as "character" variables.
+
+## Exploring Dataframe using R
+
+- You may be asking yourself, "why does this matter?" It's important for two primary reasons:
+
+\vskip 0.15 in
+
+- First, the type of variable we are working with dictates to us which visualization methods would be most appropriate.
+
+\vskip 0.15 in
+
+- Second, in terms of R programming, we can look at the variable "Sex" and "Height" in the heart dataframe and conclude that these are categorical and quantitative variables, respectively. But when we read the heart dataframe into R using \texttt{readr::read\_csv}, we didn't have to tell R what types of variables each column was; it by default scans each column and makes a best guess as to what type of variable the column contains.
+    - So how can we know that R properly recognized the variables in the heart dataframe?
+
+## Exploring Dataframes in R
+
+- One straightforward way to do this is by using the \texttt{dplyr::glimpse} function.
+
+\vskip 0.15 in
+
+- This function basically does what it sounds like: it gives us a brief glimpse of a dataframe. Let's check it out!
+
+## Exploring Dataframes in R
+
+\tiny
+
+```{r,echo=T}
+heart |>
+  dplyr::glimpse()
+```
+
+\normalsize
+
+## Exploring Dataframes in R
+
+- Sex, for example, we can imagine is a categorical variable as its values, male and female, are characteristics and not numbers.
+    - We can tell R read it in as a categorical variable because it is coded as character (notice the \texttt{<chr>} to the right of the Sex variable name).
+
+\vskip 0.15 in
+
+- Height, on the other hand, we can imagine is a quantitative variable as its values are numbers!
+    - We can tell R read it in as a quantitative variable because it is coded as double (notice the \texttt{<dbl>} to the right of the Height variable name).
+
+## Examining Subsets of Dataframes in R
+
+- Let's say I wanted to find the average or mean Age at Death from the Heart dataframe. How would I go about doing that?
+
+\vskip 0.15 in
+
+- First, I need to know how to isolate that single variable by itself.
+
+\vskip 0.15 in
+
+- To do this, we make use of the dollar-sign operator after the name of our dataframe.
+    - You can think of the dollar-sign operator like a door to your home. The name of the dataframe is the house itself, the dollar-sign is the door, and the variable name is the person we want to talk to inside of the house.
+    -   So the structure is: House\$Person
+
+\vskip 0.15 in
+
+- In your console, enter the following command, and see what happens: \texttt{heart\$AgeAtDeath}
+
+## Examining Subsets of Dataframes in R
+
+- One of the cool aspects of RStudio is that when you press the dollar sign after a dataframe, whether that's in your script window or your console window, is that it automatically pops up a list of all the variables contained within that dataset that you can navigate to with your arrow keys.
+
+\vskip 0.15 in
+
+- Okay, so now that we know how to isolate \texttt{AgeAtDeath}, we find its sample mean by using the \texttt{mean} function
+
+```{r,echo=T}
+mean(heart$AgeAtDeath)
+```
+
+## Examining Subsets of Dataframes in R
+
+- When we ran that code, the result came up as NA which stands for "not-applicable." Why is this? Isn't \texttt{AgeAtDeath} a quantitative variable?
+
+\vskip 0.15 in
+
+- One trick I often use when I get unexpected output is to look at the documentation for the function I'm trying to use with the help of the \texttt{?} operator.
+
+\vskip 0.15 in
+
+- Notice the third argument in the \texttt{mean} function, \texttt{na.rm = FALSE}.
+
+\vskip 0.15 in
+
+- If we scroll down a bit and read what this bit of code does, it basically says that it is a logical (i.e., true or false) argument asking if you want it to remove the NA values before calculating the mean or not. By default, it won't since it is set to FALSE already.
+
+## Examining Subsets of Dataframes in R
+
+- So if we change this argument to "TRUE" we should get the same 70.54 mean that we saw using the summary function.
+
+```{r,echo=T}
+mean(heart$AgeAtDeath,na.rm=TRUE)
+```
+
+## Examining Subsets of Dataframes in R
+
+- Now, let's say I have a large dataframe with lots of columns of information, as you might see in your own fields of study.
+
+\vskip 0.15 in
+
+- But, for whatever analysis I'm wanting to do, I don't need all of the columns, just a few.
+
+\vskip 0.15 in
+
+- In such a case, it might be useful to subset the dataframe and select only the columns we need.
+
+\vskip 0.15 in
+
+- How do we go about doing this? Like many things in R, there are a few different ways to yield the same result, but I'm going to show you what I consider the most straightforward method, which uses the \texttt{dplyr} package.
+
+## Examining Subsets of Dataframes in R
+
+- Let's say using the Heart dataframe, I want to create a new dataframe which only contains the last four columns: \texttt{Chol\_Status}, \texttt{BP\_Status}, \texttt{Weight\_Status}, and \texttt{Smoking\_Status}.
+
+\vskip 0.15 in
+
+- To do this, we will use the \texttt{select} function from within the \texttt{dplyr} package.
+
+```{r,echo=T}
+heart_status <- heart |>
+  dplyr::select(Chol_Status,BP_Status,
+                Weight_Status,Smoking_Status)
+```
+
+## Examining Subsets of Dataframes in R
+
+- To check and make sure the subsetting worked properly, we would use the same visualizing and summarizing approaches we used for importing data.
+
+\vskip 0.15 in
+
+- In the last problem, we subset the Heart dataframe by columns. What if we wanted to subset by values in the rows?
+
+\vskip 0.15 in
+
+- For example, let's say in the new heart_status dataframe we just created, we want to create a new dataframe where we only have those participants whose \texttt{Weight\_Status} is "Overweight."
+
+\vskip 0.15 in
+
+- Again, there are a few different approaches, but I would recommend using the \texttt{filter} function within the \texttt{dplyr} package.
+
+## Examining Subsets of Dataframes in R
+
+```{r,echo=T}
+heart_status_ow <- heart_status |>
+  dplyr::filter(Weight_Status == 'Overweight')
+```
+
+## Examining Subsets of Dataframes in R
+
+- To check and make sure this worked, I would recommend utilizing two new functions called \texttt{dplyr::group\_by} and \texttt{dplyr::count}. Basically what they is counts up frequency of unique responses for a particular variable.
+
+\vskip 0.10 in
+
+- So in the heart_status dataframe, if we use these, we can see that there are 3550 participants who were categorized as overweight.
+
+## Examining Subsets of Dataframes in R
+
+- If we look at the number of observations in the heart_status_ow dataframe, we can see we indeed have 3550 observations, meaning that \texttt{dplyr} did what it was supposed to do.
+
+```{r,echo=T}
+heart_status |>
+  dplyr::select(Weight_Status) |>
+  dplyr::group_by(Weight_Status) |>
+  dplyr::count()
+```
