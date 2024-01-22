@@ -1,0 +1,236 @@
+---
+title: "Introduction to ggplot2"
+author: "Dr. Austin R. Brown"
+institute: "Kennesaw State University"
+format: beamer
+editor: visual
+execute:
+  echo: TRUE
+  include: TRUE
+  warning: FALSE
+  error: FALSE
+---
+
+## Introduction
+
+- Within R, there are two primary methods for creating visualizations: the Base R method and the \texttt{ggplot2} method. We're going to restrict our focus mostly to the latter method.
+
+\vskip 0.10 in
+
+- The "gg" in \texttt{ggplot2} is shorthand for "grammar of graphics." 
+
+\vskip 0.10 in
+
+- It offers an incredible array of options for plotting all sorts of data types (including maps).
+
+\vskip 0.10 in
+
+- We're going to learn how to plot some of the more common graphs as well as get an understanding of some options available to us prior to moving into more specific visualizations for answering specific types of questions.
+
+## Creating a ggplot
+
+- Let's check out a basic example. Using the \texttt{mpg} dataframe, suppose we want to explore the relationship between a car's engine displacement (measured in liters) and its highway miles per gallon (mpg).
+
+\vskip 0.10 in
+
+- Since both of these are quantitative variables and we're interested in better understanding the relationship between them, the most appropriate visualization would be a scatterplot.
+
+## Creating a ggplot
+
+```{r,eval=F}
+library(tidyverse)
+mpg <- ggplot2::mpg
+mpg |>
+ggplot() + 
+  geom_point(mapping = aes(x = displ,y = hwy))
+```
+
+## Creating a ggplot
+
+```{r,echo=F}
+library(tidyverse)
+mpg <- ggplot2::mpg
+mpg |>
+ggplot() + 
+  geom_point(mapping = aes(x = displ,y = hwy))
+```
+
+## Creating a ggplot
+
+- The visual characteristics of the objects in our plots are referred to as "aesthetics" (hence the \texttt{aes()} function).
+
+\vskip 0.10 in
+
+- \texttt{aes()} controls lots of different aspects of our plots, including the size, shape, and color of the objects (bars, points, lines, etc) in the plots.
+
+\vskip 0.10 in
+
+- To illustrate, let's say we now want to visualize the relationship between engine displacement and highway mpg controlling for the type of vehicle (e.g., minivan, compact, etc.)
+
+## Creating a ggplot
+
+```{r,eval=F}
+mpg |>
+ggplot() +
+  geom_point(mapping = aes(x = displ, y = hwy,
+                           color = class))
+```
+
+## Creating a ggplot
+
+```{r,echo=F}
+ggplot(data = mpg) +
+  geom_point(mapping = aes(x = displ, y = hwy, color = class))
+```
+
+## Creating a ggplot 
+
+- Now, we also have options that we can specify outside of the \texttt{aes()} function,including those we can specify inside of the \texttt{aes()} function.
+
+\vskip 0.10 in
+
+- Let's say, for example, that we want the color of our points to be uniformly blue. 
+
+```{r,eval=F}
+mpg |>
+ggplot() +
+  geom_point(mapping = aes(x = displ, y = hwy),
+             color='blue')
+```
+
+## Creating a ggplot 
+
+```{r,echo=F}
+ggplot(data = mpg) +
+  geom_point(mapping = aes(x = displ, y = hwy),
+             color='blue')
+```
+
+## Creating a ggplot
+
+- If we want to have a uniform aesthetic, we have to manually specify it outside of the \texttt{aes()} function with a value that is accepted by the aesthetic.
+
+\vskip 0.10 in
+
+\begin{table}[h]
+  \centering
+  \begin{tabular}{|l|c|}
+    \hline
+    \text{Aesthetic} & \text{Input} \\
+    \hline
+    \texttt{color} & \text{Name of color in quotes} \\
+    \texttt{size} & \text{Size of the points in millimeters} \\
+    \texttt{shape} & \text{A number (1-15) that indicates a shape} \\
+    \texttt{alpha} & \text{A number between 0 and 1 that indicates the opacity} \\
+    \hline
+  \end{tabular}
+\end{table}
+
+## Creating a ggplot
+
+```{r,echo=FALSE,fig.align="center"}
+knitr::include_graphics("rshapes.jpg")
+```
+
+## Creating a ggplot: Data Structure
+
+- Now, let's try to create another visualization still using the MPG data. 
+
+\vskip 0.10 in
+
+- Suppose this time I want to visually compare the number (i.e., frequency) of vehicle classes contained in the dataset.
+
+\vskip 0.10 in
+
+- Here, we need to understand what we are trying to visualize from a tabular perspective.
+
+## Creating a ggplot: Data Structure
+
+- In the first example, we didn't have to transform the data in any way because each row represented a piece of information we wanted to visualize as it was.
+
+\vskip 0.10 in
+
+- In this case, each row should represent one of the car classes (e.g., suv, compact, etc).
+
+\vskip 0.10 in
+
+- And really, all we need is two columns: one for the class of vehicle and one for the number of times said class was observed in our dataset.
+
+\vskip 0.10 in
+
+- Let's use some functionality in \texttt{dplyr} to help us solve this problem!
+
+## Creating a ggplot: Data Structure
+
+```{r}
+new_mpg <- mpg |>
+  dplyr::group_by(class) |>
+  dplyr::count()
+
+new_mpg
+```
+
+## Creating a ggplot: Data Structure
+
+- Now that the data are in the right structure, we can use a new \texttt{geom} called \texttt{geom\_bar} to generate a bar chart:
+
+```{r,eval=F}
+new_mpg |>
+  ggplot(aes(x=class,y=n)) +
+  geom_bar(stat='identity') +
+  labs(x = "Vehicle Class",
+       y = "Frequency",
+       title = "Frequency of Vehicle Class Observed")
+```
+
+## Creating a ggplot: Data Structure 
+
+```{r,echo=F}
+new_mpg |>
+  ggplot(aes(x=class,y=n)) +
+  geom_bar(stat='identity') +
+  labs(x = "Vehicle Class",
+       y = "Frequency",
+       title = "Frequency of Vehicle Class Observed")
+```
+
+## Creating a ggplot: More Customization
+
+- Notice here, we used the \texttt{labs} function to generate descriptive axis and overall labels for the visualization.
+    - This aids the reader in understanding what information is being conveyed by the visualization.
+    
+\vskip 0.10 in
+
+- By default, the overall visualization title and subtitle are left justified. If we would like them to be center justified, we have to make use of a new, general function called \texttt{theme}:
+
+## Creating a ggplot: More Customization
+
+```{r,eval=F}
+new_mpg |>
+  ggplot(aes(x=class,y=n)) +
+  geom_bar(stat='identity') +
+  labs(x = "Vehicle Class",
+       y = "Frequency",
+       title = "Frequency of Vehicle Class Observed") +
+  theme(plot.title = element_text(hjust=0.50))
+```
+
+## Creating a ggplot: More Customization
+
+```{r,echo=F}
+new_mpg |>
+  ggplot(aes(x=class,y=n)) +
+  geom_bar(stat='identity') +
+  labs(x = "Vehicle Class",
+       y = "Frequency",
+       title = "Frequency of Vehicle Class Observed") +
+  theme(plot.title = element_text(hjust=0.50))
+```
+
+## Creating a ggplot: More Customization
+
+- We can also modify the overall theme or \textit{look} of a visualization by adding theme prefixed functions, some of which come by default in the \texttt{ggplot2} package and some which can be added using outside packages, like \texttt{ggthemes}.
+
+\vskip 0.10 in
+
+- Some of my favorite default themes are \texttt{theme\_minimal}, \texttt{theme\_classic}, and \texttt{theme\_bw}
