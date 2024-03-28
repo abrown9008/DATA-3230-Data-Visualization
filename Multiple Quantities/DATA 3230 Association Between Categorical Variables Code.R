@@ -9,6 +9,9 @@ library(readxl)
 
 jeopardy <- read_xlsx("Jeopardy Questions.xlsx")
 
+jeopardy |>
+  glimpse()
+
 ## Suppose I want to visualize the relationship 
 ## between the 5 most recurring categories and their
 ## dollar values in the 2000s (examining Jeopardy! round
@@ -32,7 +35,7 @@ common_categories <- jeopardy2 |>
   arrange(desc(n)) |>
   head(5)
 
-cc1 <- as.character(common_categories$category)
+cc1 <- common_categories$category
 
 ## Now, we can subset jeopardy2 by these categories! ##
 
@@ -256,3 +259,196 @@ jdf |>
 
 ## Now, let's see if we can build 4 100% stacked bar charts, 
 ## one for 2000, 2005, 2008, and 2010 ##
+
+## 2000 ##
+
+j2000 <- jeopardy |>
+  filter(Year == 2000 &
+           round == "Jeopardy!" &
+           value %in% paste("$",seq(200,1000,by=200),
+                            sep=""))
+
+j2000_2 <- j2000 |>
+  filter(category %in% cc1)
+
+jdf2000 <- j2000_2 |>
+  group_by(category,value) |>
+  count()
+
+## Create and save a 100% stacked bar chart ##
+
+jdf2000 |>
+  group_by(value) |>
+  mutate(value = factor(value,levels = c("$200",
+                                         "$400",
+                                         "$600",
+                                         "$800",
+                                         "$1000"))) |>
+  ggplot(aes(x = value, y = n, fill = reorder(category,-n))) +
+  geom_bar(stat = 'identity', 
+           position = position_dodge()) +
+  geom_text(aes(label=n),
+            position=position_dodge(width=0.9),
+            vjust = -0.15) +
+  labs(x = "Value",
+       y = "Frequency",
+       fill = "Category",
+       title = "Proportion of Most Popular Jeopardy Categories",
+       subtitle = "by Question Value Year 2000") +
+  theme_classic() +
+  theme(plot.title = element_text(hjust=0.5),
+        plot.subtitle = element_text(hjust=0.5)) -> p00
+
+## 2005 ##
+
+j2005 <- jeopardy |>
+  filter(Year == 2005 &
+           round == "Jeopardy!" &
+           value %in% paste("$",seq(200,1000,by=200),
+                            sep=""))
+
+j2005_2 <- j2005 |>
+  filter(category %in% cc1)
+
+jdf2005 <- j2005_2 |>
+  group_by(category,value) |>
+  count()
+
+## Create and save a 100% stacked bar chart ##
+
+jdf2005 |>
+  group_by(value) |>
+  mutate(value = factor(value,levels = c("$200",
+                                         "$400",
+                                         "$600",
+                                         "$800",
+                                         "$1000"))) |>
+  ggplot(aes(x = value, y = n, fill = reorder(category,-n))) +
+  geom_bar(stat = 'identity', 
+           position = position_dodge()) +
+  geom_text(aes(label=n),
+            position=position_dodge(width=0.9),
+            vjust = -0.15) +
+  labs(x = "Value",
+       y = "Frequency",
+       fill = "Category",
+       title = "Proportion of Most Popular Jeopardy Categories",
+       subtitle = "by Question Value Year 2005") +
+  theme_classic() +
+  theme(plot.title = element_text(hjust=0.5),
+        plot.subtitle = element_text(hjust=0.5)) -> p05
+
+## 2008 ##
+
+j2008 <- jeopardy |>
+  filter(Year == 2008 &
+           round == "Jeopardy!" &
+           value %in% paste("$",seq(200,1000,by=200),
+                            sep=""))
+
+j2008_2 <- j2008 |>
+  filter(category %in% cc1)
+
+jdf2008 <- j2008_2 |>
+  group_by(category,value) |>
+  count()
+
+## Create and save a 100% stacked bar chart ##
+
+jdf2008 |>
+  group_by(value) |>
+  mutate(value = factor(value,levels = c("$200",
+                                         "$400",
+                                         "$600",
+                                         "$800",
+                                         "$1000"))) |>
+  ggplot(aes(x = value, y = n, fill = reorder(category,-n))) +
+  geom_bar(stat = 'identity', 
+           position = position_dodge()) +
+  geom_text(aes(label=n),
+            position=position_dodge(width=0.9),
+            vjust = -0.15) +
+  labs(x = "Value",
+       y = "Frequency",
+       fill = "Category",
+       title = "Proportion of Most Popular Jeopardy Categories",
+       subtitle = "by Question Value Year 2008") +
+  theme_classic() +
+  theme(plot.title = element_text(hjust=0.5),
+        plot.subtitle = element_text(hjust=0.5)) -> p08
+
+## 2010 ##
+
+j2010 <- jeopardy |>
+  filter(Year == 2010 &
+           round == "Jeopardy!" &
+           value %in% paste("$",seq(200,1000,by=200),
+                            sep=""))
+
+j2010_2 <- j2010 |>
+  filter(category %in% cc1)
+
+jdf2010 <- j2010_2 |>
+  group_by(category,value) |>
+  count()
+
+## Create and save a 100% stacked bar chart ##
+
+jdf2010 |>
+  group_by(value) |>
+  mutate(value = factor(value,levels = c("$200",
+                                         "$400",
+                                         "$600",
+                                         "$800",
+                                         "$1000"))) |>
+  ggplot(aes(x = value, y = n, fill = category,-n))) +
+  geom_bar(stat = 'identity', 
+           position = position_dodge()) +
+  geom_text(aes(label=n),
+            position=position_dodge(width=0.9),
+            vjust = -0.15) +
+  labs(x = "Value",
+       y = "Frequency",
+       fill = "Category",
+       title = "Proportion of Most Popular Jeopardy Categories",
+       subtitle = "by Question Value Year 2010") +
+  theme_classic() +
+  theme(plot.title = element_text(hjust=0.5),
+        plot.subtitle = element_text(hjust=0.5)) -> p10
+
+## Okay, so now how can I arrange all of these into
+## a single figure? Let's use patchwork :) ##
+
+library(patchwork)
+
+(p00 + p05)/(p08 + p10)
+
+## We can add an overall title ##
+
+(p00 + p05)/(p08 + p10) +
+  plot_annotation(title = "Jeopardy Question Data Analysis",
+                  theme = theme(plot.title = element_text(hjust=0.50)))
+
+## Now in this case, it would probably be best practice to eliminate
+## the individual plot titles (keep year) and make colors consistent
+## for each category. ##
+
+## Let's look at another example: ##
+
+## I want you to once again use the schrute::theoffice 
+## dataset to create some visualizations ##
+
+## First, create vertical side-by-side boxplots for episode 
+## IMDB rating (imdb_rating) using color to differentiate 
+## between the seasons ##
+
+## Second, create a horizontal, ordered bar chart showing 
+## the average number of lines per episode Dwight has per season, 
+## also differentiating the bar color by season ##
+
+## Third, create another horizontal ordered bar chart to display 
+## the maximum imdb_rating per season once again using
+## color to differentiate the seasons as before ## 
+
+## Finally, combine the visualizations using the patchwork 
+## package being mindful of unnecessary replication of legends ##
