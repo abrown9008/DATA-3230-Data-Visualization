@@ -22,11 +22,11 @@ knitr::opts_chunk$set(echo = T,include=T,warning=F,message=F,tidy=F)
     
 \vskip 0.10 in
 
-- In this section, we are doing to focus on answering "How Much?" types of questions using a single (or univariate) quantitative variable.
+- In other words, we will be focusing on questions which involve a single (or univariate) quantitative variable.
 
 ## Communicating "How Much"
 
-- Quantitative variables which are measured are things like revenue, weight, distance, and time, among many, many others.
+- Quantitative variables could be characteristics like revenue, weight, distance, and time, among many, many others.
 
 \vskip 0.10 in
 
@@ -54,21 +54,24 @@ knitr::opts_chunk$set(echo = T,include=T,warning=F,message=F,tidy=F)
 
 ```{r}
 library(tidyverse)
-## To answer this question, let's first read in the data ##
-nyc <- readxl::read_xlsx("NYC Trash Data.xlsx")
+library(readxl)
+## To answer this question, let's first 
+## read in the data ##
+nyc <- read_xlsx("NYC Trash Data.xlsx")
 ## Subset to September 2011 ##
 nyc_sept11 <- nyc |>
-  dplyr::filter(MONTH == 9 & YEAR == 2011)
+  filter(MONTH == 9 & YEAR == 2011)
 ## Sum up REFUSETONSCOLLECTED variable by Borough ##
 trash_tot <- nyc_sept11 |>
-  dplyr::group_by(BOROUGH) |>
-  dplyr::summarize(Sum_Trash = sum(REFUSETONSCOLLECTED))
+  group_by(BOROUGH) |>
+  summarize(Sum_Trash = sum(REFUSETONSCOLLECTED))
 ```
 
 ## Communicating "How Much"
 
 ```{r}
-trash_tot
+## Take a glimpse of the result ##
+print(trash_tot)
 ```
 
 ## Communicating "How Much"
@@ -87,7 +90,8 @@ knitr::include_graphics("How Much Graphs.png")
 ## Let's start by building a vertical bar chart! ##
 
 ## To do so, we will use the geom_bar function ##
-
+## The stat='identity' argument tells ggplot2 
+## to use the data as is ##
 trash_tot |>
   ggplot(aes(x=BOROUGH,y=Sum_Trash)) +
   geom_bar(stat='identity')
@@ -103,18 +107,19 @@ trash_tot |>
 
 ## Communicating "How Much": The Vertical Bar Chart
 
-- Great! We have a visualization to compare "how much?" But what are some ways we could improve this visualization?
+- Great! We have a visualization to compare "how much?" But what are some ways we could improve this visualization? I notice a few right away:
+
+    1. Poor use/no use of axis titles and plot titles (How does anyone know what these data represent or what time period they represent?)
+
+    2. The comparison between boroughs isn’t as straightforward as it could be due to the bars being ordered in alphabetical rather than ascending or descending order.
+
+    3. The default color palette is less than desirable.
 
 \vskip 0.10 in
 
-- You'll notice that by default, \texttt{ggplot2} orders the bars alphabetically. It might be better to order them by value (i.e., most to least) for the comparison to be more effective.
-    - We also aren't effectively labeling things!
+Let’s see how we can solve each of these problems by adding additional code to our base visualization
 
-\vskip 0.10 in
-
-- Let's see try to solve these problems using \texttt{reorder} as well as \texttt{labs}!
-
-## Communicating "How Much": The Vertical Bar Chart
+## Including/Modifying Axis and Overall Titles
 
 ```{r,eval=F}
 ## Solving the Labels Problem ##
@@ -127,7 +132,7 @@ trash_tot |>
        subtitle = "September 2011")
 ```
 
-## Communicating "How Much": The Vertical Bar Chart
+## Including/Modifying Axis and Overall Titles
 
 ```{r}
 trash_tot |>
@@ -139,12 +144,37 @@ trash_tot |>
        subtitle = "September 2011") 
 ```
 
-## Communicating "How Much": The Horizontal Bar Chart
+## Reordering the Bars in Descending Order Based on Numeric Value
+
+```{r,eval=F}
+## Reordering the Bars ##
+trash_tot |>
+  ggplot(aes(x=reorder(BOROUGH,-Sum_Trash),y=Sum_Trash)) +
+  geom_bar(stat='identity') +
+  labs(x = "NYC Borough",
+       y = "Total Refuse Collected (in tons)",
+       title = "Trash Collectd in NYC by Borough",
+       subtitle = "September 2011")
+```
+
+## Reordering the Bars in Descending Order Based on Numeric Value
+
+```{r,echo=F}
+trash_tot |>
+  ggplot(aes(x=reorder(BOROUGH,-Sum_Trash),y=Sum_Trash)) +
+  geom_bar(stat='identity') +
+  labs(x = "NYC Borough",
+       y = "Total Refuse Collected (in tons)",
+       title = "Trash Collectd in NYC by Borough",
+       subtitle = "September 2011")
+```
+
+## Changing the Color of the Bars and Overall Theme
 
 ```{r,eval=F}
 ## Solving the Colors Problem ##
 trash_tot |>
-  ggplot(aes(x=BOROUGH,y=Sum_Trash)) +
+  ggplot(aes(x=reorder(BOROUGH,-Sum_Trash),y=Sum_Trash)) +
   geom_bar(stat='identity',color='black',fill='white') +
   labs(x = "NYC Borough",
        y = "Total Refuse Collected (in tons)",
@@ -153,24 +183,10 @@ trash_tot |>
   theme_classic()
 ```
 
-## Communicating "How Much": The Horizontal Bar Chart
+## Changing the Color of the Bars and Overall Theme
 
 ```{r,echo=F}
 ## Solving the Colors Problem ##
-trash_tot |>
-  ggplot(aes(x=BOROUGH,y=Sum_Trash)) +
-  geom_bar(stat='identity',color='black',fill='white') +
-  labs(x = "NYC Borough",
-       y = "Total Refuse Collected (in tons)",
-       title = "Trash Collectd in NYC by Borough",
-       subtitle = "September 2011") +
-  theme_classic()
-```
-
-## Communicating "How Much": The Horizontal Bar Chart
-
-```{r,eval=F}
-## Solving the Ordering Problem ##
 trash_tot |>
   ggplot(aes(x=reorder(BOROUGH,-Sum_Trash),y=Sum_Trash)) +
   geom_bar(stat='identity',color='black',fill='white') +
@@ -183,21 +199,7 @@ trash_tot |>
 
 ## Communicating "How Much": The Horizontal Bar Chart
 
-```{r,echo=F}
-## Solving the Ordering Problem ##
-trash_tot |>
-  ggplot(aes(x=reorder(BOROUGH,-Sum_Trash),y=Sum_Trash)) +
-  geom_bar(stat='identity',color='black',fill='white') +
-  labs(x = "NYC Borough",
-       y = "Total Refuse Collected (in tons)",
-       title = "Trash Collectd in NYC by Borough",
-       subtitle = "September 2011") +
-  theme_classic()
-```
-
-## Communicating "How Much": The Horizontal Bar Chart
-
-- While the exact same data are being communicated in both visualizations, the second allows us to much more quickly not only make comparisons, but get an understanding of the order.
+- Notice how this final visualization is displaying the exact same information as our base visualization, but in a manner where audiences can more readily glean the information being conveyed (not to mention the improved aesthetics!).
 
 \vskip 0.10 in
 
@@ -207,7 +209,7 @@ trash_tot |>
 
 - We change the x and y global aesthetics to achieve this.
 
-## Communicating "How Much": The Horizontal Bar Chart
+## Ordered Horizontal Bar Chart
 
 ```{r,eval=F}
 trash_tot |>
@@ -220,7 +222,7 @@ trash_tot |>
   theme_classic()
 ```
 
-## Communicating "How Much": The Horizontal Bar Chart
+## Ordered Horizontal Bar Chart
 
 ```{r,echo=F}
 trash_tot |>
@@ -233,7 +235,7 @@ trash_tot |>
   theme_classic()
 ```
 
-## Communicating "How Much": The Dot Chart
+## Building Dot Charts to Communicate “How Much”
 
 - The ordered vertical and horizontal bar charts are really useful tools for comparing "how much" but certainly they aren't the only tools.
 
@@ -246,7 +248,7 @@ trash_tot |>
 
 - Using the basic \texttt{ggplot2} syntax we have already developed, we can easily change our bar charts to dot charts:
 
-## Communicating "How Much": The Dot Chart
+## Building Dot Charts to Communicate “How Much”
 
 ```{r,eval=F}
 trash_tot |>
@@ -259,7 +261,7 @@ trash_tot |>
   theme_classic()
 ```
 
-## Communicating "How Much": The Dot Chart
+## Building Dot Charts to Communicate “How Much”
 
 ```{r,echo=F}
 trash_tot |>
@@ -272,7 +274,7 @@ trash_tot |>
   theme_classic()
 ```
 
-## Communicating "How Much": The Dot Chart
+## Building Dot Charts to Communicate “How Much”
 
 - Notice something about these dots...they're tiny! How can we control the size of the dots?
 
@@ -284,6 +286,8 @@ trash_tot |>
 
 - The default value is 1.5. We can increase or decrease this value based on our needs! Let's try \texttt{size=3}.
 
+## Building Dot Charts to Communicate “How Much”
+
 ```{r,eval=F}
 trash_tot |>
   ggplot(aes(x=reorder(BOROUGH,-Sum_Trash),y=Sum_Trash)) +
@@ -295,7 +299,7 @@ trash_tot |>
   theme_classic()
 ```
 
-## Communicating "How Much": The Dot Chart
+## Building Dot Charts to Communicate “How Much”
 
 ```{r,echo=F}
 trash_tot |>
@@ -308,7 +312,7 @@ trash_tot |>
   theme_classic()
 ```
 
-## Communicating "How Much": The Dot Chart
+## Building Dot Charts to Communicate “How Much”
 
 - Better! Let's flip the coordinates as before to create a horizontal dot chart (notice I once again removed the "-" symbol from the \texttt{reorder} function so the dots render in descending rather than ascending order):
 
@@ -316,27 +320,27 @@ trash_tot |>
 trash_tot |>
   ggplot(aes(x=Sum_Trash,y=reorder(BOROUGH,Sum_Trash))) +
   geom_point(color='blue',fill='blue',size=3) +
-  labs(x="NYC Borough",
-       y="Total Refuse Collected (in tons)",
+  labs(y="NYC Borough",
+       x="Total Refuse Collected (in tons)",
        title="Trash Collected in NYC by Borough",
        subtitle="September 2011") +
   theme_classic()
 ```
 
-## Communicating "How Much": The Dot Chart
+## Building Dot Charts to Communicate “How Much”
 
 ```{r,echo=F}
 trash_tot |>
   ggplot(aes(x=Sum_Trash,y=reorder(BOROUGH,Sum_Trash))) +
   geom_point(color='blue',fill='blue',size=3) +
-  labs(x="NYC Borough",
-       y="Total Refuse Collected (in tons)",
+  labs(y="NYC Borough",
+       x="Total Refuse Collected (in tons)",
        title="Trash Collected in NYC by Borough",
        subtitle="September 2011") +
   theme_classic()
 ```
 
-## Communicating "How Much": The Dot Chart
+## Building Dot Charts to Communicate “How Much”
 
 - One potential limitation of the dot chart, as it stands, is that even though we only care about the dots themselves, the eye may need help in moving from the y-axis to the dot, especially when the values associated with the dots are large (in a relative sense)
 
@@ -346,53 +350,23 @@ trash_tot |>
 
 \vskip 0.10 in
 
-- To do this, we are going to make use of the \texttt{theme} function, which controls many, many aspects of the visualization including font, label justification, and tick marks, just to name a few.
+- We can do this in multiple ways, but one straightforward way is to add another `geom` function! This time we can use the `geom_segment` function to draw a line segment.
 
-## Communicating "How Much": The Dot Chart
+## Building Dot Charts to Communicate “How Much”
 
-```{r,eval=F}
-trash_tot |>
-  ggplot(aes(x=Sum_Trash,y=reorder(BOROUGH,Sum_Trash))) +
-  geom_point(color='blue',fill='blue',size=3) +
-  labs(x="NYC Borough",
-       y="Total Refuse Collected (in tons)",
-       title="Trash Collected in NYC by Borough",
-       subtitle="September 2011") +
-  theme_classic() + 
-  theme(
-    panel.grid.major.y=element_line(color="gray",linetype="dashed")
-    )
-```
-
-## Communicating "How Much": The Dot Chart
-
-```{r,echo=F}
-trash_tot |>
-  ggplot(aes(x=Sum_Trash,y=reorder(BOROUGH,Sum_Trash))) +
-  geom_point(color='blue',fill='blue',size=3) +
-  labs(x="NYC Borough",
-       y="Total Refuse Collected (in tons)",
-       title="Trash Collected in NYC by Borough",
-       subtitle="September 2011") +
-  theme_classic() + 
-  theme(
-    panel.grid.major.y=element_line(color="gray",linetype="dashed")
-    )
-```
-
-## Communicating "How Much": The Dot Chart
-
-- This is better! But suppose we don't want this line to go all the way across the graph.
+- Notice in the `geom_segment` function, we have to specify when the line segments begin and end in terms of their x and y coordinates.
 
 \vskip 0.10 in
 
-- What if we instead wanted the gray dashed line to stop at the point itself?
+- We've already specified where x and y start in the global `ggplot` function: at the value of the point and the borough itself, respectively.
 
 \vskip 0.10 in
 
-- To achieve this, we can make use of the \texttt{geom\_segment} function rather than the theme function.
+- Since we are drawing horizontal lines, the value of y doesn't change. Thus `yend=BOROUGH`. 
+    - Since x starts at the value of the point, `xend=0`
+    - We can also control the `color` and `linetype` as well.
 
-## Communicating "How Much": The Dot Chart
+## Building Dot Charts to Communicate “How Much”
 
 ```{r,eval=F}
 trash_tot |>
@@ -400,14 +374,14 @@ trash_tot |>
   geom_point(color='blue',fill='blue',size=3) +
   geom_segment(aes(yend=BOROUGH),xend=0,color='gray',
                linetype='dashed') +
-  labs(x="NYC Borough",
-       y="Total Refuse Collected (in tons)",
+  labs(y="NYC Borough",
+       x="Total Refuse Collected (in tons)",
        title="Trash Collected in NYC by Borough",
        subtitle="September 2011") +
   theme_classic() 
 ```
 
-## Communicating "How Much": The Dot Chart
+## Building Dot Charts to Communicate “How Much”
 
 ```{r,echo=F}
 trash_tot |>
@@ -415,8 +389,8 @@ trash_tot |>
   geom_point(color='blue',fill='blue',size=3) +
   geom_segment(aes(yend=BOROUGH),xend=0,color='gray',
                linetype='dashed') +
-  labs(x="NYC Borough",
-       y="Total Refuse Collected (in tons)",
+  labs(y="NYC Borough",
+       x="Total Refuse Collected (in tons)",
        title="Trash Collected in NYC by Borough",
        subtitle="September 2011") +
   theme_classic() 
@@ -426,11 +400,8 @@ trash_tot |>
 
 - Now, using the \texttt{Lahman} package and the \texttt{Batting} and \texttt{People} datasets, suppose I want to know who the top 10 homerun hitters during the 2022 Major League Baseball regular season were and how many homeruns they hit?
 
-\vskip 0.10 in
+    1. Create an ordered horizontal barchart to answer this question.
 
-- In the in-class code, I provided an example of how to create a horizontal barchart. What about a vertical dot chart?
+    2. Create an ordered vertical dot chart to answer this question.
 
-\vskip 0.10 in
-
-- How else might this visualization be modified to better communicate the story we are trying to tell?
-
+    3. How else might this visualization be modified to better communicate the story we are trying to tell?

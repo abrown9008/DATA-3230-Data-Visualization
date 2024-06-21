@@ -8,20 +8,22 @@ library(tidyverse)
 
 ## To answer this question, let's first read in the data ##
 
-nyc <- readxl::read_xlsx("NYC Trash Data.xlsx")
+library(readxl)
+
+nyc <- read_xlsx("NYC Trash Data.xlsx")
 
 ## Subset to September 2011 ##
 
 nyc_sept11 <- nyc |>
-  dplyr::filter(MONTH == 9 & YEAR == 2011)
+  filter(MONTH == 9 & YEAR == 2011)
 
 ## Sum up REFUSETONSCOLLECTED variable by Borough ##
 
 trash_tot <- nyc_sept11 |>
-  dplyr::group_by(BOROUGH) |>
-  dplyr::summarize(Sum_Trash = sum(REFUSETONSCOLLECTED))
+  group_by(BOROUGH) |>
+  summarize(Sum_Trash = sum(REFUSETONSCOLLECTED))
 
-trash_tot
+print(trash_tot)
 
 ## Let's start by building a vertical bar chart! ##
 
@@ -90,8 +92,8 @@ trash_tot |>
 trash_tot |>
   ggplot(aes(x=Sum_Trash,y=reorder(BOROUGH,Sum_Trash))) +
   geom_bar(stat='identity',color='black',fill='white') +
-  labs(x = "NYC Borough",
-       y = "Total Refuse Collected (in tons)",
+  labs(y = "NYC Borough",
+       x = "Total Refuse Collected (in tons)",
        title = "Trash Collectd in NYC by Borough",
        subtitle = "September 2011") +
   theme_classic()
@@ -128,32 +130,15 @@ trash_tot |>
 trash_tot |>
   ggplot(aes(x=Sum_Trash,y=reorder(BOROUGH,Sum_Trash))) +
   geom_point(color='blue',fill='blue',size=3) +
-  labs(x="NYC Borough",
-       y="Total Refuse Collected (in tons)",
+  labs(y="NYC Borough",
+       x="Total Refuse Collected (in tons)",
        title="Trash Collected in NYC by Borough",
        subtitle="September 2011") +
   theme_classic()
 
 ## Let's try adding a dashed horizontal line going from the name
-## of the borough to the point itself by making use of the powerful
-## and versatile theme function ##
-
-trash_tot |>
-  ggplot(aes(x=Sum_Trash,y=reorder(BOROUGH,Sum_Trash))) +
-  geom_point(color='blue',fill='blue',size=3) +
-  labs(x="NYC Borough",
-       y="Total Refuse Collected (in tons)",
-       title="Trash Collected in NYC by Borough",
-       subtitle="September 2011") +
-  theme_classic() + 
-  theme(
-    panel.grid.major.y=element_line(color="gray",linetype="dashed")
-    )
-
-## What if we want the gray dashed line to stop at the point
-## itself rather than going all the way across the graph. Instead
-## of using the theme function to do this, we can instead use the
-## geom_segment function ##
+## of the borough to the point itself by making use of
+## geom_segment ##
 
 trash_tot |>
   ggplot(aes(x=Sum_Trash,y=reorder(BOROUGH,Sum_Trash))) +
@@ -182,12 +167,12 @@ install.packages('Lahman')
 ## order, and then selecting the top 10! ##
 
 homeruns <- Lahman::Batting |>
-  dplyr::left_join(Lahman::People, by="playerID") |>
-  dplyr::filter(yearID == 2022) |>
-  dplyr::mutate(PlayerName = 
+  left_join(Lahman::People, by="playerID") |>
+  filter(yearID == 2022) |>
+  mutate(PlayerName = 
                   paste(nameFirst," ",
                         nameLast,sep="")) |>
-  dplyr::arrange(desc(HR)) |>
+  arrange(desc(HR)) |>
   head(10)
 
 ## Horizontal Bar Chart ##
