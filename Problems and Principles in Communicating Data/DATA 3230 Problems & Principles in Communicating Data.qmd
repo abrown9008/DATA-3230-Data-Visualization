@@ -39,7 +39,6 @@ knitr::include_graphics("Birds.jpeg")
 knitr::include_graphics("NYC Subway.jpeg")
 ```
 
-
 ## Introduction
 
 - Or (because I love baseball) this one <https://twitter.com/i/status/1107706014655229953>
@@ -62,13 +61,13 @@ knitr::include_graphics("Bad Pie.png")
 
 ## Introduction
 
-- As another example:
+- As another example of a bad pie chart:
 
 ```{r,echo=F,fig.align='center',out.width="75%",out.height="80%"}
 knitr::include_graphics("Bad Pie2.png")
 ```
 
-## Introduction: A Step in the Process
+## Introduction: The Research Process
 
 - Data visualization is a piece of what I call the "research process." The research process can be thought of as a somewhat more specific set of steps as part of the scientific method.
 
@@ -80,8 +79,8 @@ knitr::include_graphics("Bad Pie2.png")
     3. Data Organization
     4. Data Analysis
     5. Data Communication
-    
-## Introduction: A Step in the Process
+
+## Formulating a Question
 
 - Before we start analyzing data using all of the cool techniques you have learned or will learn in your data science studies (as well as those you'll learn in this course!), we need a question which guides the study.
 
@@ -91,27 +90,26 @@ knitr::include_graphics("Bad Pie2.png")
     - "Which products tend to be purchased at the same time?"
     - "What is it about our coffee shop that brings customers back?"
     - "Which universities produce the most Major League Baseball lefthanded pitchers?"
-    
+
 \vskip 0.10 in
 
 - Answering the question, in effect, is the goal. In my opinion, this is perhaps the most critical piece of the research process.
 
-## Introduction: A Step in the Process
+## Gathering Data
 
-- Once we have our question, we can then make a determination as to what data is necessary to answer said question. 
-
-\vskip 0.10 in
-
-- Often times in organizations, this may involve querying databases and/or merging datasets from disparate sources.
+- Once we have our question, we can then make a determination as to what data is necessary to answer said question.
 
 \vskip 0.10 in
 
-- In academic types of research, we may actually have to go collect the data from, say, human participants.
-    - For instance, say my question is: "What is the relationship between time spent on TikTok and GPA among undergraduate students in Georgia?" I'm going to have to go collect information from these students since there is likely no other way for me to get it.
-    
-## Introduction: A Step in the Process
+- This may involve querying databases and/or merging datasets from disparate sources. Or alternatively, we may actually have to go collect the data ourselves.
 
-- As I am confident you have learned, the structure of the data, once collected, is incredibly important for the data analysis phase, specifically for use in software, like R or Python.
+\vskip 0.10 in
+
+- For instance, say my question is: "What is the relationship between time spent on TikTok and GPA among undergraduate students in Georgia?" I'm going to have to go collect information from these students since there is likely no other way for me to get it.
+
+## Organzing Data
+
+- As you will learn in this course and beyond, the structure of the data, once collected, is incredibly important for the data analysis phase, specifically for use in software, like R or Python.
 
 \vskip 0.10 in
 
@@ -121,7 +119,7 @@ knitr::include_graphics("Bad Pie2.png")
 
 - What this means is: every row is a unique observation and every column is a unique variable.
 
-## Introduction: A Step in the Process
+## Organzing Data
 
 - Using a subset of the famous `mtcars` dataset, the below table is organized in a tidy format as each vehicle has its own row and every column is a variable or characteristic of each vehicle:
 
@@ -132,7 +130,7 @@ cars <- datasets::mtcars |>
 knitr::kable(cars)
 ```
 
-## Introduction: A Step in the Process
+## Analyzing the Data
 
 - Once the collected data are in the appropriate format, we can then move into \textit{data analysis}, of which data visualization is a major and important component!
 
@@ -144,7 +142,7 @@ knitr::kable(cars)
 
 - This could be something as simple as a t-test or something as complicated as support vector machines. The question guides us toward the methods and techniques available to us for appropriately answering the question.
 
-## Introduction: A Step in the Process
+## Communicating the Results
 
 - Finally, once we have analyzed our data, the final step is effectively communicating the results.
 
@@ -152,22 +150,22 @@ knitr::kable(cars)
 
 - To me, this is where exceptional data scientists can set themselves apart from other data scientists. It is expected that a data scientist can perform the analyses using whichever programming language. But, the best data scientists also know how to explain the results in an accessible way.
     - Data visualization almost certainly should be a component of data communication in all analyses.
-    
+
 ## A Model of Communication
 
 - In order for us to understand how to effectively communicate data using a visual medium, it may be useful to understand the communication process in general.
 
 \vskip 0.10 in
 
-- As an example, suppose you are with a friend and you want to plan on going to dinner this coming weekend at a fancy new restaurant. 
+- As an example, suppose you are with a friend and you want to plan on going to dinner this coming weekend at a fancy new restaurant.
 
 \vskip 0.10 in
 
-- Here, the source of information (or data source) is the thought in your brain: "Hey I think it would be fun to go to dinner at this new fancy restaurant with my good friend this coming weekend." 
+- Here, the source of information (or data source) is the thought in your brain: "Hey I think it would be fun to go to dinner at this new fancy restaurant with my good friend this coming weekend."
 
 ## A Model of Communication
 
-- From there, you turn this thought into verbal words (the message) and communicate that with your friend with your voice (the transmitter). 
+- From there, you turn this thought into verbal words (the message) and communicate that with your friend with your voice (the transmitter).
 
 \vskip 0.10 in
 
@@ -195,26 +193,26 @@ knitr::include_graphics("Communication Model.png")
 
 ## Three Types of Communication Problems
 
-- I am confident that at some point in your life, you have run into a communication problem. 
+- I am confident that at some point in your life, you have run into a communication problem.
     - I was about 15 when AOL/MSN instant messenger became widely popular and high school sophomore Dr Brown was constantly running into communication issues with friends. This was one of the first times that text-based communication was widely used as a means of instant communication.
     - People, myself included, were not "texting" the way that they talk and that lead to all sorts of issues.
-    
+
 \vskip 0.10 in
 
 - For us in data visualization, we can categorize communication problems into three broad types:
     1. \underline{The Technical Problem}
     2. \underline{The Semantic Problem}
     3. \underline{The Effectiveness Problem}
-    
+
 ## Three Types of Communication Problems: The Technical Problem
 
 - The technical problem can be assessed with a question: "How accurately can the symbols of communication be transmitted?"
 
 \vskip 0.10 in
 
-- For us, this has to do with things like number of pixels, aspect ratio, sound quality, etc. 
+- For us, this has to do with things like number of pixels, aspect ratio, sound quality, etc.
     - Really, it is anything which yields in an outcome in which the message's receiver gets something other than what was originally designed/crafted.
-    
+
 \vskip 0.10 in
 
 - This is sometimes an issue with using non-Instagram pictures in an Instagram post, without doing the appropriate resizing.
@@ -227,12 +225,12 @@ knitr::include_graphics("Communication Model.png")
 
 - In data visualization, this can take lots of different forms. As one example, maybe we use an inappropriate visualization for our data type.
     - In the donut pie chart example, those data would have likely been more effectively visualized as a bar graph with descriptive axis titles.
-    
+
 \vskip 0.10 in
 
-- It could also look like using symbols not necessarily understood by all audience members. 
+- It could also look like using symbols not necessarily understood by all audience members.
     - For example, if we wanted to plot team-level data for National Basketball Association (NBA) teams using the team logo instead of name, but our audience is a general audience, they might not be clear one what information is being conveyed.
-    
+
 ## Three Types of Communication Problems: The Effectiveness Problem
 
 - The effectiveness problem can be assessed with the question: "How effectively does the received meaning affect conduct in the desired way?"
@@ -246,10 +244,10 @@ knitr::include_graphics("Communication Model.png")
 
 - In the homeruns visualization, my "so what?" was the appreciation of how good of hitters the all-time greats were for such a long time.
     - In the bird density visualization, my "so what?" was connecting the intuitive idea that birds are not highly concentrated in high-altitude locations, like the Rocky Mountain west.
-    
+
 ## Principles of Communicating Data
 
-- So if we know that data visualization are useful and powerful tools for communicating information to broad audiences, and that we also know that there are problems we can encounter in doing so, it would be useful to have a general framework or principles for communicating data visually.
+- If we know that data visualization are useful and powerful tools for communicating information to broad audiences, and that we also know that there are problems we can encounter in doing so, it would be useful to have a general framework or principles for communicating data visually.
 
 \vskip 0.10 in
 
@@ -279,14 +277,13 @@ knitr::include_graphics("Communication Model.png")
 knitr::include_graphics("Goal.png")
 ```
 
-
 ## Principle 2: Use the Right Data
 
 - Clearly, in order for us to be able to achieve our goal, we need to ensure that we are using the "right" data.
 
 \vskip 0.10 in
 
-- What is "right" is going to wildly vary depending on what the goal is. 
+- What is "right" is going to wildly vary depending on what the goal is.
 
 \vskip 0.10 in
 
@@ -294,17 +291,17 @@ knitr::include_graphics("Goal.png")
 
 ## Principle 2: Use the Right Data
 
-- For example, suppose I want to build a visualization which shows how undergraduate data science students are performing in an introductory computing class. 
+- For example, suppose I want to build a visualization which shows how undergraduate data science students are performing in an introductory computing class.
 
 \vskip 0.10 in
 
-- We would first need to operationalize "student performance." One way could be by looking at the overall score for the course. 
+- We would first need to operationalize "student performance." One way could be by looking at the overall score for the course.
 
 \vskip 0.10 in
 
-- Next, we would need to decide how much data is right for our goal. Is one semester and one course sufficient? Or would we want multiple courses and multiple semesters? 
+- Next, we would need to decide how much data is right for our goal. Is one semester and one course sufficient? Or would we want multiple courses and multiple semesters?
     - These questions should be answered before doing anything else!!
-    
+
 ## Principle 3: Select Suitable Visualizations
 
 - For us to effectively communicate information, we must use appropriate visualizations. In general, we do this by first understanding the variable types that we are graphing. In general, we have:
@@ -317,9 +314,9 @@ knitr::include_graphics("Goal.png")
 
 \vskip 0.10 in
 
-- What is effective for quantitative variables likely won't be as effective for nominal variables and vice versa. 
+- What is effective for quantitative variables likely won't be as effective for nominal variables and vice versa.
     - We will talk more specifically about effective techniques for each variable type as the semester progresses.
-    
+
 ## Principle 4: Design for Aesthetics
 
 - Graphs can be designed with many or few aesthetic elements, such as watermarks or annotations or different font colors, etc.
@@ -352,7 +349,7 @@ knitr::include_graphics("Aesthetic Good and Bad.png")
 \vskip 0.10 in
 
 1. Standalone graphics or narrated?
-2. Static, interactive, animated, or combined? 
+2. Static, interactive, animated, or combined?
 3. If narrated: recorded, live, or both?
 4. If live: remote, in person, or both?
 5. In all cases: broadcast, directed, or both?
@@ -371,14 +368,14 @@ knitr::include_graphics("Data Spectrum.png")
 
 - Having feedback loops is a good life skill but is especially useful in data science and data visualization.
     - This helps us know to what degree our efforts yielded the intended result.
-    
+
 \vskip 0.10 in
 
 - To do this, we can ask questions like:
     1. Did the audience receive the message at all? Or who did and who didn't?
     2. Did the audience interpret the data message in the way you intended?
     3. Did the audience react in the way you wanted them to react?
-    
+
 \vskip 0.10 in
 
 - The answers to these questions can be useful in aiding the development of our visualization and data science skills.
@@ -389,4 +386,4 @@ knitr::include_graphics("Data Spectrum.png")
 
 \vskip 0.10 in
 
-- Throughout this course, we will explore specific ways of doing this very thing and also think critically about what effectivenss means in specific situations.
+- Throughout this course, we will explore specific ways of doing this very thing and also think critically about what effectiveness means in specific situations.

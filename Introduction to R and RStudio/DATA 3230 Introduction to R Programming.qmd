@@ -4,6 +4,12 @@ author: "Dr. Austin Brown"
 institute: "Kennesaw State University"
 format: beamer
 editor: visual
+execute:
+  echo: true
+  include: true
+  warning: false
+  message: false
+  tidy: false
 ---
 
 ## Why Use R?
@@ -32,9 +38,8 @@ editor: visual
 - \textbf{Command-line} means that we have to give R commands in order for us to get it to do something
 
 ```{r}
-#| echo: true
-## I want to add 2 and 2
-2 + 2
+## I want to add 3 and 5
+3 + 5
 ```
 
 ## So What is R?
@@ -42,8 +47,8 @@ editor: visual
 - \textbf{Object-oriented} means that we can save individual pieces of output as some name that we can use later. This is a super handy feature, especially when you have complicated scripts!
 
 ```{r,echo=TRUE}
-## I can save 2 + 2 as "a"
-a <- 2 + 2
+## Saving the result of 3 + 5 as a ##
+a <- 3 + 5
 a
 ```
 
@@ -65,7 +70,7 @@ a
 
 \vskip 0.15 in
 
-- While there are lots of different files which can be imported into R (Google is an excellent resource for searching for code for how to do something), we're going to focus on two main types: Excel and CSV
+- While there are lots of different files which can be imported into R (Google and ChatGPT are excellent resources for searching for code for how to do something), we're going to focus on two main types: Excel and CSV
 
 ## Importing Data into R
 
@@ -110,6 +115,7 @@ install.packages('readr')
 ```
 
 ## Importing Data into R
+
 - Now, we can also think of functions like mathematical functions; we have to supply the function with special inputs called \textit{\underline{arguments}} in order to get the desired output.
     - For instance, in the \texttt{install.packages} function, we had to specify to the function which package we wanted to install.
 
@@ -139,7 +145,8 @@ install.packages('readr')
 - So for us, because we know that the CSV has names for the columns, our code for importing will be:
 
 ```{r,echo=T}
-heart <- readr::read_csv("HEART.csv")
+library(readr)
+heart <- read_csv("HEART.csv")
 ```
 
 ## Importing Data into R
@@ -154,9 +161,19 @@ heart <- readr::read_csv("HEART.csv")
 
 - After installing \texttt{readxl}, we can read in the file by:
 
-```{r,echo=T}
+```{r,eval=F}
+## First, install readxl ##
+install.packages('readxl')
+## Load the readxl package ##
+library(readxl)
 ## Importing the 'esoph' dataset ##
-esoph <- readxl::read_xlsx("esoph.xlsx")
+esoph <- read_xlsx("esoph.xlsx")
+```
+```{r,echo=F}
+## Load the readxl package ##
+library(readxl)
+## Importing the 'esoph' dataset ##
+esoph <- read_xlsx("esoph.xlsx")
 ```
 
 ## Exploring Dataframes in R
@@ -165,27 +182,29 @@ esoph <- readxl::read_xlsx("esoph.xlsx")
 
 \vskip 0.15 in
 
-- There are two general approaches I'd recommend. One is visual and one uses the \texttt{dplyr::glimpse} function.
-
-\vskip 0.15 in
-
-- In the upper right hand corner of the RStudio window, we see our heart dataframe we uploaded a bit ago. If we click on it, a new window will open up which shows us the structure of the dataframe, the values of the variables, and the variable names.
-
-## Exploring Dataframes in R
-
-- This visual method is effective for relatively small dataframes (\< 10,000 rows), but can bog down if you have a large dataframe.
-
-\vskip 0.15 in
-
-- To get around this, we can just look at a few rows of the dataframe using the \texttt{dplyr::glimpse} function, which prints the first few rows of a dataframe to your console.
-    - \texttt{dplyr::glimpse(heart)}
+- The best way that I have found which uses a combination of some traditional functions is a function called \texttt{glimpse} which is part of an incredibly useful data wrangling package called \texttt{dplyr}.
 
 ```{r,echo=T,eval=F}
 ## First, Install dplyr ##
 install.packages('dplyr')
+## Load the dplyr package ##
+library(dplyr)
+## Get a glimpse of the data ##
 heart |>
-  dplyr::glimpse()
+  glimpse()
 ```
+
+## Exploring Dataframes in R
+
+\tiny
+```{r,echo=F}
+## Load the dplyr package ##
+library(dplyr)
+## Get a glimpse of the data ##
+heart |>
+  glimpse()
+```
+\normalsize
 
 ## Exploring Dataframes in R
 
@@ -214,7 +233,7 @@ heart |>
 
 ## Exploring Dataframes in R
 
-- One straightforward way to do this is by using the \texttt{dplyr::glimpse} function.
+- One straightforward way to do this is by using the \texttt{glimpse} function.
 
 \vskip 0.15 in
 
@@ -226,7 +245,7 @@ heart |>
 
 ```{r,echo=T}
 heart |>
-  dplyr::glimpse()
+  glimpse()
 ```
 
 \normalsize
@@ -253,7 +272,7 @@ heart |>
 
 - To do this, we make use of the dollar-sign operator after the name of our dataframe.
     - You can think of the dollar-sign operator like a door to your home. The name of the dataframe is the house itself, the dollar-sign is the door, and the variable name is the person we want to talk to inside of the house.
-    -   So the structure is: House\$Person
+    - So the structure is: \texttt{House\$Person}
 
 \vskip 0.15 in
 
@@ -289,7 +308,7 @@ mean(heart$AgeAtDeath)
 
 ## Examining Subsets of Dataframes in R
 
-- So if we change this argument to "TRUE" we should get the same 70.54 mean that we saw using the summary function.
+- So if we change this argument to "TRUE" we should get the right answer:
 
 ```{r,echo=T}
 mean(heart$AgeAtDeath,na.rm=TRUE)
@@ -317,13 +336,28 @@ mean(heart$AgeAtDeath,na.rm=TRUE)
 
 \vskip 0.15 in
 
-- To do this, we will use the \texttt{select} function from within the \texttt{dplyr} package.
+-   To do this, we will use the \texttt{select} function from within the \texttt{dplyr} package.
+
+```{r,eval=T}
+heart_status <- heart |>
+  select(Chol_Status,BP_Status,
+        Weight_Status,Smoking_Status)
+
+heart_status |>
+  glimpse()
+```
+
+## Examining Subsets of Dataframes in R
 
 ```{r,echo=T}
 heart_status <- heart |>
-  dplyr::select(Chol_Status,BP_Status,
-                Weight_Status,Smoking_Status)
+  select(Chol_Status,BP_Status,
+        Weight_Status,Smoking_Status)
+
+heart_status |>
+  glimpse()
 ```
+
 
 ## Examining Subsets of Dataframes in R
 
@@ -345,7 +379,7 @@ heart_status <- heart |>
 
 ```{r,echo=T}
 heart_status_ow <- heart_status |>
-  dplyr::filter(Weight_Status == 'Overweight')
+  filter(Weight_Status == 'Overweight')
 ```
 
 ## Examining Subsets of Dataframes in R
@@ -354,15 +388,15 @@ heart_status_ow <- heart_status |>
 
 \vskip 0.10 in
 
-- So in the heart_status dataframe, if we use these, we can see that there are 3550 participants who were categorized as overweight.
+- So in the \texttt{heart\_status} dataframe, if we use these, we can see that there are 3550 participants who were categorized as overweight.
 
 ## Examining Subsets of Dataframes in R
 
-- If we look at the number of observations in the heart_status_ow dataframe, we can see we indeed have 3550 observations, meaning that \texttt{dplyr} did what it was supposed to do.
+-   If we look at the number of observations in the \texttt{heart\_status\_ow} dataframe, we can see we indeed have 3550 observations, meaning that \texttt{dplyr} did what it was supposed to do.
 
 ```{r,echo=T}
 heart_status |>
-  dplyr::select(Weight_Status) |>
-  dplyr::group_by(Weight_Status) |>
-  dplyr::count()
+  select(Weight_Status) |>
+  group_by(Weight_Status) |>
+  count()
 ```

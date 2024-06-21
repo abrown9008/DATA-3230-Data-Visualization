@@ -53,7 +53,9 @@ install.packages('readr')
 
 ## Go Ahead and Read it in ##
 
-heart <- readr::read_csv("HEART.csv")
+library(readr)
+
+heart <- read_csv("HEART.csv")
 
 ## Importing an XLSX File ##
 
@@ -63,7 +65,9 @@ install.packages('readxl')
 
 ## Importing the 'esoph' dataset ##
 
-esoph <- readxl::read_xlsx("esoph.xlsx")
+library(readxl)
+
+esoph <- read_xlsx("esoph.xlsx")
 
 ## We can explore some characteristics of our datasets
 ## using the dplyr::glimpse function! ##
@@ -72,8 +76,10 @@ esoph <- readxl::read_xlsx("esoph.xlsx")
 
 install.packages('dplyr')
 
+library(glimpse)
+
 heart |>
-  dplyr::glimpse()
+  glimpse()
 
 ## Find the mean of AgeAtDeath ##
 
@@ -90,17 +96,17 @@ mean(heart$AgeAtDeath,na.rm=TRUE)
 ## Subset last four column of Heart ##
 
 heart_status <- heart |>
-  dplyr::select(Chol_Status,BP_Status,
-                Weight_Status,Smoking_Status) 
+  select(Chol_Status,BP_Status,
+         Weight_Status,Smoking_Status) 
 
 ## Subset Overweight Participants ##
 
 heart_status_ow <- heart_status |>
-  dplyr::filter(Weight_Status == 'Overweight')
+  filter(Weight_Status == 'Overweight')
 
 ## Checking to Make Sure Subset Worked ##
 
 heart_status |>
-  dplyr::select(Weight_Status) |>
-  dplyr::group_by(Weight_Status) |>
-  dplyr::count()
+  select(Weight_Status) |>
+  group_by(Weight_Status) |>
+  count()
