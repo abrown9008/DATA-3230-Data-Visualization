@@ -54,20 +54,18 @@ install.packages('readr')
 ## Go Ahead and Read it in ##
 
 library(readr)
-
-heart <- read_csv("HEART.csv")
+heart <- read_csv("Introduction to R and RStudio/HEART.csv")
 
 ## Importing an XLSX File ##
 
 ## Installing the 'readxl' package ##
 
 install.packages('readxl')
+library(readxl)
 
 ## Importing the 'esoph' dataset ##
 
-library(readxl)
-
-esoph <- read_xlsx("esoph.xlsx")
+esoph <- read_xlsx("Introduction to R and RStudio/esoph.xlsx")
 
 ## We can explore some characteristics of our datasets
 ## using the dplyr::glimpse function! ##
@@ -75,8 +73,7 @@ esoph <- read_xlsx("esoph.xlsx")
 ## We have to first install the dplyr package ##
 
 install.packages('dplyr')
-
-library(glimpse)
+library(dplyr)
 
 heart |>
   glimpse()
@@ -99,14 +96,11 @@ heart_status <- heart |>
   select(Chol_Status,BP_Status,
          Weight_Status,Smoking_Status) 
 
+heart_status |>
+  glimpse()
+
 ## Subset Overweight Participants ##
 
 heart_status_ow <- heart_status |>
   filter(Weight_Status == 'Overweight')
 
-## Checking to Make Sure Subset Worked ##
-
-heart_status |>
-  select(Weight_Status) |>
-  group_by(Weight_Status) |>
-  count()
