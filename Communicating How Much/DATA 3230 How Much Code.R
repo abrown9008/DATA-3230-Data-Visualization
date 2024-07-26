@@ -1,6 +1,7 @@
 ## DATA 3230 - How Much?? ##
 
 library(tidyverse)
+library(readxl)
 
 ## "How does the amount of garbage/refuse (in tons) that 
 ## the NYC Department of Sanitation reportedly collected 
@@ -8,9 +9,7 @@ library(tidyverse)
 
 ## To answer this question, let's first read in the data ##
 
-library(readxl)
-
-nyc <- read_xlsx("NYC Trash Data.xlsx")
+nyc <- read_xlsx("Communicating How Much/NYC Trash Data.xlsx")
 
 ## Subset to September 2011 ##
 
@@ -22,6 +21,8 @@ nyc_sept11 <- nyc |>
 trash_tot <- nyc_sept11 |>
   group_by(BOROUGH) |>
   summarize(Sum_Trash = sum(REFUSETONSCOLLECTED))
+
+## Take a glimpse of the result ##
 
 print(trash_tot)
 
@@ -151,39 +152,6 @@ trash_tot |>
        subtitle="September 2011") +
   theme_classic() 
  
-## Homeruns Example: Visualize using horizontal bar and dot charts
-## the top 10 homerun hitters during the 2022 regular season ##
 
-## First, we need to install the Lahman package ##
-
-install.packages('Lahman')
-
-## Once this is complete, we need to get the data into the right
-## format. What the below code is doing is joining the Batting dataset
-## to the People dataset so we can access the player's names.
-## We are then creating a player name variable by concatenating
-## the nameFirst and nameLast variables. Then, we are filtering to
-## only the 2022 season, ordering the resulting dataset in descending 
-## order, and then selecting the top 10! ##
-
-homeruns <- Lahman::Batting |>
-  left_join(Lahman::People, by="playerID") |>
-  filter(yearID == 2022) |>
-  mutate(PlayerName = 
-                  paste(nameFirst," ",
-                        nameLast,sep="")) |>
-  arrange(desc(HR)) |>
-  head(10)
-
-## Horizontal Bar Chart ##
-
-homeruns |>
-  ggplot(aes(x=HR,y=reorder(PlayerName,HR))) +
-  geom_bar(stat='identity',color='red',fill='white') +
-  labs(x="Regular Season Homeruns Hit",
-       y="Player Name",
-       title="Top 10 Major League Baseball Homerun Hitters",
-       subtitle="2022 Regular Season") +
-  theme_classic()
 
 
